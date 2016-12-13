@@ -26,7 +26,10 @@ class GazeboCircuit2cTurtlebotCameraNnEnv(gazebo_env.GazeboEnv):
 
     def __init__(self):
         # Launch the simulation with the given launchfile name
-        gazebo_env.GazeboEnv.__init__(self, "GazeboCircuit2cTurtlebotLidar_v0.launch")
+        #gazebo_env.GazeboEnv.__init__(self, "GazeboCircuit2cTurtlebotLidar_v0.launch")
+        gazebo_env.GazeboEnv.__init__(self, "GazeboMazeTurtlebotLidar_v0.launch")
+        #gazebo_env.GazeboEnv.__init__(self, "GazeboRoundTurtlebotLidar_v0.launch")
+        
         self.vel_pub = rospy.Publisher('/mobile_base/commands/velocity', Twist, queue_size=5)
         self.unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
@@ -61,31 +64,31 @@ class GazeboCircuit2cTurtlebotCameraNnEnv(gazebo_env.GazeboEnv):
         except rospy.ServiceException, e:
             print ("/gazebo/unpause_physics service call failed")
 
-        '''# 21 actions
-        max_ang_speed = 0.3
+        # 21 actions
+        max_ang_speed = 0.2
         ang_vel = (action-10)*max_ang_speed*0.1 #from (-0.33 to + 0.33)
 
         vel_cmd = Twist()
-        vel_cmd.linear.x = 0.2
+        vel_cmd.linear.x = 0.1
         vel_cmd.angular.z = ang_vel
-        self.vel_pub.publish(vel_cmd)'''
+        self.vel_pub.publish(vel_cmd)
 
-        # 3 actions
+        '''# 3 actions
         if action == 0: #FORWARD
             vel_cmd = Twist()
-            vel_cmd.linear.x = 0.2
+            vel_cmd.linear.x = 0.1
             vel_cmd.angular.z = 0.0
             self.vel_pub.publish(vel_cmd)
         elif action == 1: #LEFT
             vel_cmd = Twist()
             vel_cmd.linear.x = 0.05
-            vel_cmd.angular.z = 0.2
+            vel_cmd.angular.z = 0.1
             self.vel_pub.publish(vel_cmd)
         elif action == 2: #RIGHT
             vel_cmd = Twist()
             vel_cmd.linear.x = 0.05
-            vel_cmd.angular.z = -0.2
-            self.vel_pub.publish(vel_cmd)
+            vel_cmd.angular.z = -0.1
+            self.vel_pub.publish(vel_cmd)'''
 
         data = None
         while data is None:
@@ -131,7 +134,7 @@ class GazeboCircuit2cTurtlebotCameraNnEnv(gazebo_env.GazeboEnv):
         action_sum = sum(self.last50actions)
 
 
-        '''# 21 actions
+        # 21 actions
         if not done:
             # Straight reward = 5, Max angle reward = 0.5
             reward = round(15*(max_ang_speed - abs(ang_vel) +0.0335), 2)
@@ -141,7 +144,7 @@ class GazeboCircuit2cTurtlebotCameraNnEnv(gazebo_env.GazeboEnv):
                 #print("90 percent of the last 50 actions were turns. LOOPING")
                 reward = -5
         else:
-            reward = -200'''
+            reward = -200
 
 
         # Add center of the track reward
@@ -152,16 +155,16 @@ class GazeboCircuit2cTurtlebotCameraNnEnv(gazebo_env.GazeboEnv):
 
         center_detour = abs(right_sum - left_sum)/5
 
-        # 3 actions
+        '''# 3 actions
         if not done:
             if action == 0:
-                reward = 1 / float(center_detour+1)
+                reward = 10 / float(center_detour+1)
             elif action_sum > 45: #L or R looping
-                reward = -0.5
+                reward = -5
             else: #L or R no looping
-                reward = 0.5 / float(center_detour+1)
+                reward = 5 / float(center_detour+1)
         else:
-            reward = -1
+            reward = -200'''
 
         #print("detour= "+str(center_detour)+" :: reward= "+str(reward)+" ::action="+str(action))
 

@@ -17,7 +17,7 @@ class GazeboCircuit2TurtlebotLidarNnEnv(gazebo_env.GazeboEnv):
 
     def __init__(self):
         # Launch the simulation with the given launchfile name
-        gazebo_env.GazeboEnv.__init__(self, "GazeboCircuit2TurtlebotLidar_v0.launch")
+        gazebo_env.GazeboEnv.__init__(self, "GazeboMazeTurtlebotLidar_v0.launch")
         self.vel_pub = rospy.Publisher('/mobile_base/commands/velocity', Twist, queue_size=5)
         self.unpause = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
         self.pause = rospy.ServiceProxy('/gazebo/pause_physics', Empty)
@@ -46,13 +46,21 @@ class GazeboCircuit2TurtlebotLidarNnEnv(gazebo_env.GazeboEnv):
         except rospy.ServiceException, e:
             print ("/gazebo/unpause_physics service call failed")
 
-        max_ang_speed = 0.3
-        ang_vel = (action-10)*max_ang_speed*0.1 #from (-0.33 to + 0.33)
-
-        vel_cmd = Twist()
-        vel_cmd.linear.x = 0.2
-        vel_cmd.angular.z = ang_vel
-        self.vel_pub.publish(vel_cmd)
+        if action == 0: #FORWARD
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.25
+            vel_cmd.angular.z = 0.0
+            self.vel_pub.publish(vel_cmd)
+        elif action == 1: #LEFT
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.05
+            vel_cmd.angular.z = 0.3
+            self.vel_pub.publish(vel_cmd)
+        elif action == 2: #RIGHT
+            vel_cmd = Twist()
+            vel_cmd.linear.x = 0.05
+            vel_cmd.angular.z = -0.3
+            self.vel_pub.publish(vel_cmd)
 
         data = None
         while data is None:
@@ -71,9 +79,10 @@ class GazeboCircuit2TurtlebotLidarNnEnv(gazebo_env.GazeboEnv):
         state,done = self.calculate_observation(data)
 
         if not done:
-            # Straight reward = 5, Max angle reward = 0.5
-            reward = round(15*(max_ang_speed - abs(ang_vel) +0.0335), 2)
-            # print ("Action : "+str(action)+" Ang_vel : "+str(ang_vel)+" reward="+str(reward))
+            if action == 0:
+                reward = 10
+            else:
+                reward = 5
         else:
             reward = -200
 

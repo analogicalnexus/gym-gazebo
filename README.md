@@ -4,10 +4,10 @@ This is part of the Fall 2016 - Robot learning course project.
 
 ## Project Report and Presentation slides
 
-Project report -  https://github.com/analogicalnexus/gym-gazebo/collision_avoidance/Report-CollisionAvoidanceusingReinforcementLearning.pdf
-Presentation slides - https://github.com/analogicalnexus/gym-gazebo/collision_avoidance/Report-CollisionAvoidanceusingReinforcementLearning.pdf
+Project report -  https://github.com/analogicalnexus/gym-gazebo/blob/master/collision_avoidance/Report-Collision%20Avoidance%20using%20Reinforcement%20Learning%20.pdf
+Presentation slides - https://github.com/analogicalnexus/gym-gazebo/blob/master/collision_avoidance/PPT-Collision%20Avoidance%20using%20Reinforcement%20Learning%20.pdf
 
-## Result Videos
+## Result (Simulation videos) 
 
 ### Collision Avoidance using Q - Learning 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=9dVvnyUN0EQ

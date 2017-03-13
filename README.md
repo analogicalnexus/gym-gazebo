@@ -1,6 +1,6 @@
 # Collision Avoidance using Reinforcement Learning
 
-This is part of the Fall 2016 - Robot learning course project. 
+This is a part of the Fall 2016 - Robot learning course project. 
 
 ## Project Report and Presentation slides
 
